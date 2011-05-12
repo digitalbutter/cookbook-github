@@ -1,7 +1,10 @@
 #
 # Author:: Ed Bosher (<ed@butter.com.hk>)
 # Copyright:: Copyright (c) 2011 Digital Butter Ltd.
-# License:: Apache License, Version 2.0
+# Cookbook Name:: github
+# Recipe:: default
+#
+# Copyright 2011, Digital Butter Limited
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,15 +19,15 @@
 # limitations under the License.
 #
 
-include 'Octopi'
-
-action :create do
-  begin
-    authenticated_with :login => node[:github][:username], :token => node[:github][:token] do
-      Repository.create(:name => @new_resource.name)
-      @new_resource.updated_by_last_action(true)
-    end
-  rescue APIError => error
-    Chef::Log.info "The github provider failed with: #{error}"
+node[:github][:repositories].each do |repository|
+  github_secure_scm node[:github][:clone_directory] do
+    repository repository.src_url
+    revision "HEAD"
+    remote 'origin'
+    action :sync # or :rollback
+    provider Chef::Provider::GithubSecureGit
+    user "root"
+    group "root"
+    ssh_key Base64.decode64(data_bag_item(node[:github][:key_bag], node[:github][:key_item])['value'])
   end
 end

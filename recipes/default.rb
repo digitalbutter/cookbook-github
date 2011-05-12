@@ -18,3 +18,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+["git-ssh-wrapper", "octopi"].each do |pack|
+  gem_package pack do
+    action :install
+  end
+end

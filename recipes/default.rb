@@ -1,4 +1,6 @@
 #
+# Author:: Ed Bosher (<ed@butter.com.hk>)
+# Copyright:: Copyright (c) 2011 Digital Butter Ltd.
 # Cookbook Name:: github
 # Recipe:: default
 #

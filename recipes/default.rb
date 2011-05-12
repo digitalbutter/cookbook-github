@@ -19,8 +19,25 @@
 # limitations under the License.
 #
 
-["git-ssh-wrapper", "octopi"].each do |pack|
-  gem_package pack do
-    action :install
+r = []
+
+["libxslt1-dev","libxml2-dev"].each do |pack|
+  r.push package pack do
+    action :nothing
   end
 end
+
+["git-ssh-wrapper", "octopi"].each do |pack|
+  r.push gem_package pack do
+    action :nothing
+  end
+end
+
+r.each do |pack|
+  pack.run_action(:install)
+end
+
+require 'rubygems'
+Gem.clear_paths
+require 'git-ssh-wrapper'
+require 'octopi'

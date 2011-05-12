@@ -16,12 +16,19 @@
 # limitations under the License.
 #
 
-include 'Octopi'
+include Opscode::Github::Github
 
 action :create do
   begin
     authenticated_with :login => node[:github][:username], :token => node[:github][:token] do
-      Repository.create(:name => @new_resource.name)
+      #Check to see if the repo exists
+      repo = Repository.find(:name => @new_resource.name, :user => node[:github][:username])
+
+      #If it doesn't create it
+      if(repo == nil && node[:github][:force_create])
+        repo = Repository.create(:name => @new_resource.name)
+      end
+
       @new_resource.updated_by_last_action(true)
     end
   rescue APIError => error

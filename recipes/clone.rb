@@ -20,8 +20,25 @@
 #
 
 node[:github][:repositories].each do |repository|
-  github_secure_scm node[:github][:clone_directory] do
-    repository repository.src_url
+  Chef::Log.info "Repository info #{repository}"
+
+  #If force_create set, create the repo if it doesn't exist
+  if node[:github][:force_create]
+    github_repository repository[:name] do
+
+    end
+  end
+
+  #Get the list of existing repositories
+
+  directory  node[:github][:clone_directory] do
+    action :create
+    recursive true
+  end
+
+  #Clone the existing repositories
+  github_secure_scm node[:github][:clone_directory] + "/" + repository[:name] do
+    repository repository[:src_url]
     revision "HEAD"
     remote 'origin'
     action :sync # or :rollback

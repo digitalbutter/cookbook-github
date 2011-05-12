@@ -16,6 +16,6 @@
 # limitations under the License.
 #
 
-actions :create, :delete, :get_branches, :get_tags, :clone_url
+actions :clone, :delete, :get_branches, :get_tags, :clone_url
 
 attribute :name, :kind_of => String, :name_attribute => true

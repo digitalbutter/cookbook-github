@@ -64,7 +64,7 @@ action :sync do
 end
 
 def load_current_resource
-  @current_resource = Chef::Resource::TikiflowSecureScm.new(@new_resource.name)
+  @current_resource = Chef::Resource::GithubSecureScm.new(@new_resource.name)
   if current_revision = find_current_revision
     @current_resource.revision current_revision
   end

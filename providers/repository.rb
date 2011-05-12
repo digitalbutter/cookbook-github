@@ -18,20 +18,43 @@
 
 include Opscode::Github::Github
 
+include Chef::Mixin::ShellOut
+
 action :create do
   begin
-    authenticated_with :login => node[:github][:username], :token => node[:github][:token] do
+    authenticated_with :login => node[:github][:username], :token => data_bag_item(node[:github][:token_bag], node[:github][:token_item])['value'] do
       #Check to see if the repo exists
-      repo = Repository.find(:name => @new_resource.name, :user => node[:github][:username])
+      begin
+        repo = Repository.find(:name => @new_resource.name, :user => node[:github][:account])
+        @new_resource.updated_by_last_action(true)
+      rescue Octopi::NotFound
+        #If it doesn't create it
+        if node[:github][:force_create]
+          Chef::Log.info "#{@new_resource.name} does not exist. Will now create the github repository."
+          repo = Repository.create(:name => @new_resource.name, :user => node[:github][:account])
 
-      #If it doesn't create it
-      if(repo == nil && node[:github][:force_create])
-        repo = Repository.create(:name => @new_resource.name)
+          #Make the repo private
+          Api.api.post("/repos/set/private/#{node[:github][:account]}/#{@new_resource.name}", { :cache => false })
+
+#         TODO Fix this throwing a 401 error
+#          @new_resource.collaborators.each do |collaborator|
+#            Api.api.post("/teams/#{collaborator}/repositories?name=#{node[:github][:account]}/#{@new_resource.name}", { :cache => false })
+#          end
+
+          @new_resource.updated_by_last_action(true)
+        end
       end
-
-      @new_resource.updated_by_last_action(true)
     end
   rescue APIError => error
     Chef::Log.info "The github provider failed with: #{error}"
+  end
+end
+
+action :fetch_upstream do
+  result = shell_out!('git remote add upstream https://github.com/modxcms/revolution.git', :cwd => node[:github][:clone_directory] + "/" + @new_resource.name, :returns => [0,128]).stdout
+  if result != "fatal: remote upstream already exists."
+    #fetch it
+    shell_out!('git pull upstream master', :cwd => node[:github][:clone_directory] + "/" + @new_resource.name, :returns => [0,128])
+    shell_out!('git push origin master', :cwd => node[:github][:clone_directory] + "/" + @new_resource.name, :returns => [0,128])
   end
 end

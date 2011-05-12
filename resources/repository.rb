@@ -16,6 +16,7 @@
 # limitations under the License.
 #
 
-actions :clone, :delete, :get_branches, :get_tags, :clone_url
+actions :create, :fetch_upstream
 
 attribute :name, :kind_of => String, :name_attribute => true
+attribute :collaborators, :kind_of => Array

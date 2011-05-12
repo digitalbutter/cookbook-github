@@ -40,4 +40,3 @@ end
 require 'rubygems'
 Gem.clear_paths
 require 'git-ssh-wrapper'
-require 'octopi'

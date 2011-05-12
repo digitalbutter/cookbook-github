@@ -25,12 +25,12 @@ node[:github][:repositories].each do |repository|
   #If force_create set, create the repo if it doesn't exist
   if node[:github][:force_create]
     github_repository repository[:name] do
-
+      action :create
+      collaborators repository[:collaborators]
     end
   end
 
-  #Get the list of existing repositories
-
+  #Create the required directory
   directory  node[:github][:clone_directory] do
     action :create
     recursive true
@@ -39,12 +39,18 @@ node[:github][:repositories].each do |repository|
   #Clone the existing repositories
   github_secure_scm node[:github][:clone_directory] + "/" + repository[:name] do
     repository repository[:src_url]
-    revision "HEAD"
+    revision "master"
     remote 'origin'
-    action :sync # or :rollback
+    action :checkout # or :rollback
     provider Chef::Provider::GithubSecureGit
     user "root"
     group "root"
     ssh_key Base64.decode64(data_bag_item(node[:github][:key_bag], node[:github][:key_item])['value'])
+  end
+
+  if repository[:deploy_modx]
+    github_repository repository[:name] do
+      action :fetch_upstream
+    end
   end
 end

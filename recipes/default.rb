@@ -33,7 +33,6 @@ end
 
 r.push gem_package "octopi" do
   action :nothing
-  version "0.4.2"
 end
 
 r.each do |pack|

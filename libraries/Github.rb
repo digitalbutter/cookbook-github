@@ -13,7 +13,6 @@ end
 module Opscode
   module Github
     module Github
-      include Octopi
     end
   end
 end

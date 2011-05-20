@@ -27,13 +27,10 @@ r = []
   end
 end
 
-r.push gem_package "git-ssh-wrapper" do
-  action :nothing
-end
-
-r.push gem_package "octopi" do
-  action :nothing
-  version "0.4.2"
+["git-ssh-wrapper","rest-client","json"].each do |pack|
+  r.push gem_package pack do
+    action :nothing
+  end
 end
 
 r.each do |pack|
@@ -43,3 +40,4 @@ end
 require 'rubygems'
 Gem.clear_paths
 require 'git-ssh-wrapper'
+require 'rest_client'

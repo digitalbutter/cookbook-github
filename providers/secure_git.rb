@@ -22,7 +22,6 @@
 #
 
 require 'chef/mixin/language'
-
 include Chef::Mixin::ShellOut
 
 action :checkout do

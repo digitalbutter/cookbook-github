@@ -19,6 +19,7 @@ end
 module Opscode
   module Github
     module Github
+<<<<<<< HEAD
       def show_repo_info(name,repo)
           response = RestClient.get "https://github.com/api/v2/json/repos/show/#{name}/#{repo}"
 
@@ -35,6 +36,8 @@ module Opscode
           #For everything else report the exception
           raise "Github returned #{response.code}. Response: #{response.to_str}"
       end
+=======
+>>>>>>> 60d0b59a676ed9cf565d49e943a734ce3ce80177
     end
   end
 end

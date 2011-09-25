@@ -32,14 +32,6 @@ end
   r.push gem_package pack do
     action :nothing
   end
-=======
-r.push gem_package "git-ssh-wrapper" do
-  action :nothing
-end
-
-r.push gem_package "octopi" do
-  action :nothing
->>>>>>> 60d0b59a676ed9cf565d49e943a734ce3ce80177
 end
 
 r.each do |pack|

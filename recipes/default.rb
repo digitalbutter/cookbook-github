@@ -27,7 +27,6 @@ r = []
   end
 end
 
-<<<<<<< HEAD
 ["git-ssh-wrapper","rest-client","json"].each do |pack|
   r.push gem_package pack do
     action :nothing

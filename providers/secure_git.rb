@@ -108,7 +108,7 @@ end
 def checkout
   sha_ref = target_revision
   # checkout into a local branch rather than a detached HEAD
-  shell_out!("git checkout -b deploy #{sha_ref}", run_options(:cwd => @new_resource.destination))
+  shell_out!("git checkout #{sha_ref}", run_options(:cwd => @new_resource.destination))
   Chef::Log.info "#{@new_resource} checked out branch: #{@new_resource.revision} reference: #{sha_ref}"
 end
 
